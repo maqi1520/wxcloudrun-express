@@ -49,6 +49,31 @@ app.get("/api/wx_openid", async (req, res) => {
   }
 });
 
+var webot = require('weixin-robot');
+
+
+// 指定回复消息
+webot.set('hi', '你好');
+
+webot.set('subscribe', {
+  pattern: function(info) {
+    return info.is('event') && info.param.event === 'subscribe';
+  },
+  handler: function(info) {
+    return '欢迎订阅微信机器人';
+  }
+});
+
+webot.set('test', {
+  pattern: /^test/i,
+  handler: function(info, next) {
+    next(null, 'roger that!')
+  }
+})
+
+// 接管消息请求
+webot.watch(app, { token: 'your1weixin2token', path: '/wechat' });
+
 const port = process.env.PORT || 80;
 
 async function bootstrap() {
