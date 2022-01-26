@@ -2,6 +2,7 @@ const path = require("path");
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
+const wechat = require("./wechat");
 const { init: initDB, Counter } = require("./db");
 
 const logger = morgan("tiny");
@@ -11,6 +12,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors());
 app.use(logger);
+app.use(express.query());
 
 // 首页
 app.get("/", async (req, res) => {
@@ -49,30 +51,8 @@ app.get("/api/wx_openid", async (req, res) => {
   }
 });
 
-var webot = require('weixin-robot');
 
-
-// 指定回复消息
-webot.set('hi', '你好');
-
-webot.set('subscribe', {
-  pattern: function(info) {
-    return info.is('event') && info.param.event === 'subscribe';
-  },
-  handler: function(info) {
-    return '欢迎订阅微信机器人！！！';
-  }
-});
-
-webot.set('test', {
-  pattern: /^test/i,
-  handler: function(info, next) {
-    next(null, 'roger that!')
-  }
-})
-
-// 接管消息请求
-webot.watch(app, { token: 'your1weixin2token', path: '/wechat' });
+app.use('/wechat', wechat);
 
 const port = process.env.PORT || 80;
 
