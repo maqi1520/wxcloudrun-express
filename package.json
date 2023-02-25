@@ -13,7 +13,7 @@
     "express": "^4.16.4",
     "morgan": "^1.10.0",
     "mysql2": "^2.3.2",
-    "sequelize": "^6.8.0",
+    "sequelize": "^6.29.0",
     "wechat": "^2.1.0"
   },
   "engines": {
